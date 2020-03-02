@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="188dp"
+                android:orientation="horizontal"
+                android:weightSum="3"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:elevation="5dp"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/capture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="80dp"
+                    android:background="@drawable/ripple_button"
+                    android:elevation="5dp"
+                    android:text="Camera"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
+                <Button
+                    android:id="@+id/picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="80dp"
+                    android:background="@drawable/ripple_button"
+                    android:elevation="5dp"
+                    android:text=" Select Image "
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/regist_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:hint="Registration number"
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/black" />
+
+            <EditText
+                android:id="@+id/car_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:hint="Enter Car Name"
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/black" />
+
+            <Spinner
+                android:id="@+id/car_type_spin"
+                android:layout_width="170dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ripple_button" />
+
+            <EditText
+                android:id="@+id/car_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:hint="Price"
+                android:inputType="number"
+                android:textColor="@android:color/black"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/black" />
+
+            <EditText
+                android:id="@+id/man_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:hint="Manufacture Year (yyyy)"
+                android:inputType="number"
+                android:textColor="@android:color/black"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/black" />
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ripple_button"
+                android:text="OK"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

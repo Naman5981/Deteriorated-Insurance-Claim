@@ -1,16 +1,25 @@
 package com.naman.insuranceclaim;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,15 +51,17 @@ public class DamageCar extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123,MY_CAMERA_REQUEST_CODE = 100;
     Button picker, ok,capture;
     OkHttpClient client;
-    ImageView image;
+    LinearLayout layout;
     Uri mImageUri = null;
+    ArrayList<Uri> mArrayUri;
     Request request;
-    String pathToImage;
+    String pathToImage,car_type_str,regist_no_str,car_name_str,price_str,man_year_str;
+    String[] car_type_list = {"Hatchback" , "SUV" , "Sedan"};
     Bundle bundle;
-    File file;
-    Context context;
+    Spinner car_type_spin;
     ArrayList<String> labelarr, probabilityarr;
     File photoFile;
+    EditText man_year,car_name,regist_no,car_price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +72,32 @@ public class DamageCar extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(this, permissions, ALL_PERMISSIONS);
 
-        setContentView(R.layout.damagecar);
-        image=findViewById(R.id.image);
-
+        setContentView(R.layout.carcheck);
+        layout =findViewById(R.id.imageView);
         picker = findViewById(R.id.picker);
+        man_year = findViewById(R.id.man_year);
+        car_name = findViewById(R.id.car_name);
+        regist_no = findViewById(R.id.regist_no);
+        car_price = findViewById(R.id.car_price);
+
+
+        //Spinner
+        car_type_spin = findViewById(R.id.car_type_spin);
+        ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, car_type_list);
+        array.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        car_type_spin.setAdapter(array);
+        car_type_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                car_type_str = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,15 +106,26 @@ public class DamageCar extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGES);
+                startActivityForResult(Intent.createChooser(intent, "Select atleast 3 Pictures"), PICK_IMAGES);
             }
         });
 
-        ok = findViewById(R.id.button);
+        ok = findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if ( (man_year.getText().toString().trim().equals("") && car_name.getText().toString().trim().equals("")
+                    && regist_no.getText().toString().trim().equals("")) && car_price.getText().toString().trim().equals(""))
+                {
+                    man_year.setError("This field is required");
+                    car_name.setError("This field is required");
+                    car_price.setError("This field is required");
+                    regist_no.setError("This field is required");
+                }
 
+                else if(man_year.getText().toString().length() >0 && car_name.getText().toString().length() >0
+                        && regist_no.getText().toString().length() >0 && car_price.getText().toString().length() >0)
+                {
                 Thread thread = new Thread(new Runnable() {
 
                     @Override
@@ -138,10 +182,21 @@ public class DamageCar extends AppCompatActivity {
                                         labelarr.add(label);
                                         probabilityarr.add(probability);
                                     }
+                                    regist_no_str = regist_no.getText().toString();
+                                    car_name_str = car_name.getText().toString();
+                                    price_str = car_price.getText().toString();
+                                    man_year_str = man_year.getText().toString();
+
                                     bundle=new Bundle();
+//                                    bundle.putParcelableArrayList("URI",mArrayUri);
                                     bundle.putString("URI", String.valueOf(mImageUri));
                                     bundle.putStringArrayList("label",labelarr);
                                     bundle.putStringArrayList("pro",probabilityarr);
+                                    bundle.putString("man_year",man_year_str);
+                                    bundle.putString("regist_no",regist_no_str);
+//                                    bundle.putString("car_name",car_name_str);
+                                    bundle.putString("car_price",price_str);
+                                    bundle.putString("car_type",car_type_str);
                                     bundle.putInt("n",jsonArray.length());
                                     Intent intent =new Intent(DamageCar.this,Result.class);
                                     intent.putExtras(bundle);
@@ -157,7 +212,7 @@ public class DamageCar extends AppCompatActivity {
                     }
                 });
                 thread.start();
-            }
+            }}
         });
 
         capture = findViewById(R.id.capture);
@@ -165,7 +220,6 @@ public class DamageCar extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mImageUri=null;
-                Log.e("jbsdfgduivdfjg", "yha aa gya camera open kr rha hu");
 //                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                startActivityForResult(cameraIntent, CAMERA_REQUEST);
                 String pathFolder = "/Deteriorated Vehicle";
@@ -197,16 +251,35 @@ public class DamageCar extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGES) {
-            if (resultCode == RESULT_OK && data.getData() != null) {
-                mImageUri = data.getData();
-                image = findViewById(R.id.image);
-                Glide.with(DamageCar.this).load(mImageUri).into(image);
+            if (resultCode == RESULT_OK && data.getClipData() != null ) {
+                mArrayUri=new ArrayList<>();
+                ClipData mClipData = data.getClipData();
+                mImageUri = mClipData.getItemAt(0).getUri();
+                for (int i = 0; i < 3; i++) {
+                    ClipData.Item item = mClipData.getItemAt(i);
+                    Uri uri = item.getUri();
+                    mArrayUri.add(uri);
+                }
                 pathToImage = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), mImageUri);
-                Log.e("psdjwg", "" + pathToImage);
+                for (int i = 0; i < mClipData.getItemCount(); i++) {
+                    ImageView image = new ImageView(this);
+                    image.setLayoutParams(new android.view.ViewGroup.LayoutParams(400,400));
+
+                    // Adds the view to the layout
+                    layout.addView(image);
+                    Glide.with(DamageCar.this).load(mArrayUri.get(i)).into(image);
+                    Log.e("psdjwg", "" + pathToImage);
+                }
             }
         }
         if (requestCode == CAMERA_REQUEST)
         {
+            ImageView image = new ImageView(this);
+            image.setLayoutParams(new android.view.ViewGroup.LayoutParams(200,200));
+
+            // Adds the view to the layout
+            layout.addView(image);
+            mArrayUri=new ArrayList<>();
             Glide.with(DamageCar.this).load(mImageUri).dontAnimate().into(image);
             if (data != null && data.getData() != null) {
 
