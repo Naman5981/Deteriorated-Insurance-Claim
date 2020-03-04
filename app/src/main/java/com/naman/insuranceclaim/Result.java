@@ -14,7 +14,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 
 public class Result extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class Result extends AppCompatActivity {
     Float temp;
     String car_type;
     Double est_price=0.0;
+    Button view_save;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,15 +90,62 @@ public class Result extends AppCompatActivity {
                     est_price=est_price+600;
                 }
             }
+            else if (car_type.equals("SUV"))
+            {
+                if (label.get(i).equals("broken_lights") && temp >= 0.2)
+                {
+                    est_price=est_price+5000;
+                }
+                if (label.get(i).equals("broken_bumper") && temp >= 0.2)
+                {
+                    est_price=est_price+30000;
+                }
+                if (label.get(i).equals("broken_glass") && temp >= 0.2)
+                {
+                    est_price=est_price+8000;
+                }
+                if (label.get(i).equals("scratch") && temp >= 0.2)
+                {
+                    est_price=est_price+800;
+                }
+                if (label.get(i).equals("dent") && temp >= 0.2)
+                {
+                    est_price=est_price+1500;
+                }
+            }
+            else if (car_type.equals("Sedan"))
+            {
+                if (label.get(i).equals("broken_lights") && temp >= 0.2)
+                {
+                    est_price=est_price+2000;
+                }
+                if (label.get(i).equals("broken_bumper") && temp >= 0.2)
+                {
+                    est_price=est_price+15000;
+                }
+                if (label.get(i).equals("broken_glass") && temp >= 0.2)
+                {
+                    est_price=est_price+5000;
+                }
+                if (label.get(i).equals("scratch") && temp >= 0.2)
+                {
+                    est_price=est_price+600;
+                }
+                if (label.get(i).equals("dent") && temp >= 0.2)
+                {
+                    est_price=est_price+1000;
+                }
+            }
 //            Toast.makeText(this, ""+est_price, Toast.LENGTH_SHORT).show();
 //        }
     }
-        TextView tv = new TextView(this);
+        TextView tv;
+        tv = findViewById(R.id.est_price);
         tv.setText("Estimated Price = "+est_price);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tv.setTextSize(20);
         tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        linearLayout.addView(tv);
+//        linearLayout.addView(tv);
 //        for(int i = 0 ; i < n ; i++)
 //        {
 //            if(i==1)
@@ -110,5 +160,15 @@ public class Result extends AppCompatActivity {
 //                pro5 = pro.get(5);
 //        }
 //        Toast.makeText(this, pro5, Toast.LENGTH_SHORT).show();
+
+        view_save= findViewById(R.id.view_save);
+        view_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Result.this,viewCarActivity.class);
+                startActivity(intent);
+            }
+        });
+
 }
 }

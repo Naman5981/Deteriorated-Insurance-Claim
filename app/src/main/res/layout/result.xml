@@ -8,8 +8,10 @@
 
     <ImageView
         android:id="@+id/capturedimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:layout_marginTop="10dp"
@@ -20,5 +22,24 @@
         android:background="@drawable/ripple_button"
         android:gravity="center"
         android:text="  Send Report to Mail  " />
+
+    <TextView
+        android:id="@+id/est_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/view_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ripple_button"
+        android:text=" View Saved car " />
+
 
 </LinearLayout>

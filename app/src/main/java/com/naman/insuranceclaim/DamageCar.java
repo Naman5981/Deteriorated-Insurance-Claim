@@ -22,11 +22,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +42,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Credentials;
@@ -48,8 +57,11 @@ import okhttp3.Response;
 public class DamageCar extends AppCompatActivity {
 
     private int PICK_IMAGES,CAMERA_REQUEST=1888;
+    public FirebaseFirestore db;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123,MY_CAMERA_REQUEST_CODE = 100;
     Button picker, ok,capture;
+    private static final String CAR_KEY = "car_name";
+    private static final String MANUFACTURE_KEY = "manufacture_year";
     OkHttpClient client;
     LinearLayout layout;
     Uri mImageUri = null;
@@ -62,6 +74,8 @@ public class DamageCar extends AppCompatActivity {
     ArrayList<String> labelarr, probabilityarr;
     File photoFile;
     EditText man_year,car_name,regist_no,car_price;
+    Button logout;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +93,8 @@ public class DamageCar extends AppCompatActivity {
         car_name = findViewById(R.id.car_name);
         regist_no = findViewById(R.id.regist_no);
         car_price = findViewById(R.id.car_price);
+        logout = findViewById(R.id.logout);
+        db = FirebaseFirestore.getInstance();
 
 
         //Spinner
@@ -95,6 +111,16 @@ public class DamageCar extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                finish();
+                Intent intent = new Intent(DamageCar.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -187,6 +213,7 @@ public class DamageCar extends AppCompatActivity {
                                     price_str = car_price.getText().toString();
                                     man_year_str = man_year.getText().toString();
 
+                                    firebase_add();
                                     bundle=new Bundle();
 //                                    bundle.putParcelableArrayList("URI",mArrayUri);
                                     bundle.putString("URI", String.valueOf(mImageUri));
@@ -211,9 +238,12 @@ public class DamageCar extends AppCompatActivity {
                         }
                     }
                 });
+
                 thread.start();
             }}
+
         });
+
 
         capture = findViewById(R.id.capture);
         capture.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +276,39 @@ public class DamageCar extends AppCompatActivity {
                 }
             }
             });
+    }
+
+    private void firebase_add() {
+
+//                        String man_year_str = man_year.getText().toString();
+//                        String car_name_str = car_name.getText().toString();
+        Map<String, Object> userCarData = new HashMap<>();
+        userCarData.put(CAR_KEY, car_name_str);
+        userCarData.put("price",price_str);
+        userCarData.put("registration_number",regist_no_str);
+        userCarData.put(MANUFACTURE_KEY, man_year_str);
+        userCarData.put("user_email",mAuth.getCurrentUser().getEmail());
+
+        if(db.collection("users").document(mAuth.getCurrentUser().getEmail()).get().isSuccessful())
+        {
+            db.collection("users").document(mAuth.getCurrentUser().getEmail()).update(userCarData);
+        }
+
+        else {
+            db.collection("users").document(mAuth.getCurrentUser().getEmail()).set(userCarData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(DamageCar.this, "Car Info Saved", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(DamageCar.this, "Some Error Occured", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     @Override

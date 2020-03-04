@@ -11,8 +11,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,12 +24,21 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+        currentUser = mAuth.getCurrentUser();
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent mainIntent = new Intent(MainActivity.this, DamageCar.class);
-                MainActivity.this.startActivity(mainIntent);
-                MainActivity.this.finish();
+
+                if(currentUser!=null){
+                    Intent intent=new Intent(MainActivity.this,DamageCar.class);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                }
+                else{
+                    Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                }
             }
         }, 1500);
     }

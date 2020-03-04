@@ -135,6 +135,19 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black" />
 
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ripple_button"
+                android:text="LogOut"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black" />
+
         </LinearLayout>
     </ScrollView>
 
