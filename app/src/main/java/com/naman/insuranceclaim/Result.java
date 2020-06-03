@@ -55,7 +55,8 @@ public class Result extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","", null));
                 String subject = "Deteriorated Vehicle Report";
-                String message = regist_no_str2 + " " + man_year_str2 + " " + price_str2+"\n ESTIMATED PRICE "+ " "+est_price;
+                String message = "Car Name : "+car_name_str2 +"\nCar Registration number : " +regist_no_str2 + "\n Manufacture year : " + man_year_str2 +
+                        "\nPrice : "+ price_str2+"\n Estimated Price of damage is: " +est_price;
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 intent.putExtra(Intent.EXTRA_TEXT, message);
                 startActivity(Intent.createChooser(intent, "Choose an Email client :"));

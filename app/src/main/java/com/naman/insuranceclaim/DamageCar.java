@@ -221,7 +221,7 @@ public class DamageCar extends AppCompatActivity {
                                     bundle.putStringArrayList("pro",probabilityarr);
                                     bundle.putString("man_year",man_year_str);
                                     bundle.putString("regist_no",regist_no_str);
-//                                    bundle.putString("car_name",car_name_str);
+                                    bundle.putString("car_name",car_name_str);
                                     bundle.putString("car_price",price_str);
                                     bundle.putString("car_type",car_type_str);
                                     bundle.putInt("n",jsonArray.length());
@@ -280,8 +280,6 @@ public class DamageCar extends AppCompatActivity {
 
     private void firebase_add() {
 
-//                        String man_year_str = man_year.getText().toString();
-//                        String car_name_str = car_name.getText().toString();
         Map<String, Object> userCarData = new HashMap<>();
         userCarData.put(CAR_KEY, car_name_str);
         userCarData.put("price",price_str);

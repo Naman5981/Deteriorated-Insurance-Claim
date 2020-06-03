@@ -15,8 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".viewCarActivity"></activity>
-        <activity android:name=".InsuranceActivity" />
-        <activity android:name=".ServiceActivity" />
         <activity android:name=".LoginActivity" />
 
         <provider
