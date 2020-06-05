@@ -174,7 +174,7 @@ public class DamageCar extends AppCompatActivity {
                             Log.e("position", "InREQUESTBODY");
 
                             request = new Request.Builder()
-                                    .url("https://app.nanonets.com/api/v2/MultiLabelClassification/Model/2e13199d-4442-48d4-9e1e-b88090f3c666/LabelFiles/")
+                                    .url("https://google.tensorflow.com/v2/MultiLabelClassification/Model/Model/6/LabelUrls/")
                                     .post(requestBody)
                                     .addHeader("Authorization", Credentials.basic("HEWJBag9ie5gQjVl4oBNoClyH6R4dIiz", ""))
                                     .build();
